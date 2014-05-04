@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Collections;
 
 namespace WindowsFormsApplication2
 {
@@ -33,8 +34,17 @@ namespace WindowsFormsApplication2
         {
             try
             {
-                minhaArvore.insere(Convert.ToInt32(txtValor.Text));
-                listBox1.Items.Add("Inserido: " + txtValor.Text);
+                /*
+                Random num = new Random();
+                int random = 0;
+                
+                for (int x = 0; x < y; x++)
+                {
+                    random = num.Next();*/
+                   int y = Convert.ToInt32(txtValor.Text);
+                    minhaArvore.insere(y);
+                    listBox1.Items.Add("Inserido: " + y);
+                //}
             }
             catch
             {
@@ -46,7 +56,14 @@ namespace WindowsFormsApplication2
 
         private void button2_Click_1(object sender, EventArgs e)
         {
+            //ArrayList dados = new ArrayList();
+            
+            //dados = minhaArvore.listagem();
+           // foreach (int itens in dados )
             listBox1.Items.Add(minhaArvore.listagem());
+
+            listBox1.Items.Add("Comparacao: " + minhaArvore.qtde_de_comp());
+
         }
 
         private void button3_Click(object sender, EventArgs e)
