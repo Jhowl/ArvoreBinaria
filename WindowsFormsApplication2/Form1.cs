@@ -38,7 +38,7 @@ namespace WindowsFormsApplication2
                 Random num = new Random();
                 int random = 0;
                 
-                for (int x = 0; x < y; x++)
+                for (int x = 10000000; x < y; x++)
                 {
                     random = num.Next();*/
                    int y = Convert.ToInt32(txtValor.Text);
@@ -61,8 +61,6 @@ namespace WindowsFormsApplication2
             //dados = minhaArvore.listagem();
            // foreach (int itens in dados )
             listBox1.Items.Add(minhaArvore.listagem());
-
-            listBox1.Items.Add("Comparacao: " + minhaArvore.qtde_de_comp());
 
         }
 

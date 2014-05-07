@@ -12,20 +12,13 @@ namespace WindowsFormsApplication2
         
         private int qtde = 0;// qtde de nos internos
 
-        private bool flag = true;
-
-        private int balance = 0;
+        private bool flag = false;
 
         private string resultado = "";
         
         public int qtde_nos_internos() // devolve a qtde de nós internos
         { 
             return qtde;
-        }
-
-        public int qtde_de_comp() // devolve a qtde de nós internos
-        {
-            return balance;
         }
         
         public bool no_eh_externo(Nodo no)// verifica se um determinado Nodo é externo
@@ -41,78 +34,88 @@ namespace WindowsFormsApplication2
         }
 
         public void insere(int valor)// insere um valor int
-        {
-            Nodo no_aux;
+         {
+            Nodo no;
 
-            if (qtde == 0)
+            if (raiz == null)
             {
                 // árvore vazia, devemos criar o primeiro Nodo, que será a raiz
-                no_aux = new Nodo();
-                raiz = no_aux;
+                no = new Nodo();
+                raiz = no;
+                aloca(valor, raiz);
             }
             else
             {
                 // localiza onde deve ser inserido o novo nó.
-                no_aux = raiz;
-                while (no_eh_externo(no_aux) == false)
-                {
-                    balance++;
-
-                    if (valor > no_aux.get_valor())
-                    {
-                        no_aux = no_aux.get_no_direita();
-                        if (flag) /*inseriu: verificar balanceamento*/
-                            switch (no_aux.get_balance())
-                            {
-                                case -1: /*era mais alto à esq.: zera FB*/
-                                    no_aux.set_balance(0);
-                                    flag = false;
-                                    break;
-                                case 0:
-                                    no_aux.set_balance(1);
-                                    break;
-                                /*direita fica maior: propaga verificação*/
-                                case 1: /*FB(p) = 2 e p retorna balanceado*/
-                                    CASO2(no_aux);
-                                    flag = false;
-                                    break;
-                            }
-                    }
-                    else
-                    {
-                        no_aux = no_aux.get_no_esquerda();
-                        if (flag)
-                            switch (no_aux.get_balance())
-                            {
-                                case 1: /*mais alto a direita*/
-                                    no_aux.set_balance(0); /*balanceou com ins. esq*/
-                                    flag = false; /*interrompe propagação*/
-                                    break;
-                                case 0:
-                                    no_aux.set_balance(-1); /*ficou maior à esq.*/
-                                    break;
-                                case -1: /*FB(p) = -2*/
-                                    CASO1(no_aux); /*p retorna balanceado*/
-                                    flag = false;
-                                    break; /*não propaga mais*/
-                            }
-                    }
-                }
+                insere_arvore(valor, raiz);
             }
-            // este era um Nodo externo e portanto não tinha filhos.
-            // Agora ele passará a ter valor. Também devemos criar outros 2
-            // Nodos externos (filhos) para ele.
+        }
+
+        public void insere_arvore(int value, Nodo no)
+        {
+            if (no_eh_externo(no))
+            {
+                /*árvore vazia: insere e sinaliza alteração de FB*/
+                aloca(value, no); 
+                flag = true;
+                return;
+            }
+
+            if (value > no.get_valor())
+            {
+                insere_arvore(value, no.get_no_direita());
+                if (flag) /*inseriu: verificar balanceamento*/
+                    switch (no.get_balance())
+                    {
+                        case -1: /*era mais alto à esq.: zera FB*/
+                            no.set_balance(0);
+                            flag = false;
+                            break;
+                        case 0:
+                            no.set_balance(1);
+                            break;
+                        /*direita fica maior: propaga verificação*/
+                        case 1: /*FB(p) = 2 e p retorna balanceado*/
+                            CASO2(no);
+                            flag = false;
+                            break;
+                    }
+                return;
+            }
+
+            if (value < no.get_valor())
+            {
+                insere_arvore(value, no.get_no_esquerda());
+                if (flag)
+                    switch (no.get_balance())
+                    {
+                        case 1: /*mais alto a direita*/
+                            no.set_balance(0); /*balanceou com ins. esq*/
+                            flag = false; /*interrompe propagação*/
+                            break;
+                        case 0:
+                            no.set_balance(-1); /*ficou maior à esq.*/
+                            break;
+                        case -1: /*FB(p) = -2*/
+                            CASO1(no); /*p retorna balanceado*/
+                            flag = false;
+                            break; /*não propaga mais*/
+                    }
+            }
+            return;
+        }
+
+
+        public void aloca(int valor, Nodo no_aux)
+        {
             no_aux.set_valor(valor);
-       
+
+            no_aux.set_balance(0);
+
             no_aux.set_no_direita(cria_No_externo(no_aux));
         
             no_aux.set_no_esquerda(cria_No_externo(no_aux));
-
-            flag = true;
-        
-            qtde++;
         }
-
 
         void CASO1(Nodo p)
         {
@@ -159,7 +162,8 @@ namespace WindowsFormsApplication2
             q.set_no_direita(p);
             p.set_no_esquerda(temp);
             p = q;
-        }
+        }
+
         private void rot_dir_esq(Nodo p)
         {
             Nodo z, v;
