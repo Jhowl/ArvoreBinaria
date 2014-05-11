@@ -48,131 +48,94 @@ namespace WindowsFormsApplication2
             {
                 // localiza onde deve ser inserido o novo nó.
                 raiz = insere_arvore(raiz, valor);
-                raiz = CorrigeAVL(raiz);
-                Seta_FB(raiz);
             }
         }
 
         public Nodo insere_arvore(Nodo no, int value)
         {
+
             if (no_eh_externo(no))
             {
                 /*árvore vazia: insere e sinaliza alteração de FB*/
                 no =_aloca(value, no); 
                 flag = true;
+                qtde++;
                 return no;
             }
 
             if (value > no.get_valor())
-               no.set_no_direita(insere_arvore(no.get_no_direita(), value));
-
+            {
+                no.set_no_direita(insere_arvore(no.get_no_direita(), value));                
+                if (flag) /*inseriu: verificar balanceamento*/
+                   switch (no.get_balance())
+                   {
+                       case -1: /*era mais alto à esq.: zera FB*/
+                           no.set_balance(0);
+                           flag = false;
+                           break;
+                       case 0:
+                           no.set_balance(1);
+                           break;
+                       /*direita fica maior: propaga verificação*/
+                       case 1: /*FB(p) = 2 e p retorna balanceado*/
+                           no = CASO2(no);
+                           flag = false;
+                           break;
+                   }
+            }
+               
             if (value < no.get_valor())
-               no.set_no_esquerda(insere_arvore(no.get_no_esquerda(), value));
+            {
+                no.set_no_esquerda(insere_arvore(no.get_no_esquerda(), value));                
+                if (flag)
+                    switch (no.get_balance())
+                    {
+                        case 1: /*mais alto a direita*/
+                            no.set_balance(0); /*balanceou com ins. esq*/
+                            flag = false; /*interrompe propagação*/
+                            break;
+                        case 0:
+                            no.set_balance(-1); /*ficou maior à esq.*/
+                            break;
+                        case -1: /*FB(p) = -2*/
+                            no = CASO1(no); /*p retorna balanceado*/
+                            flag = false;
+                            break; /*não propaga mais*/
+                    }
+            }
 
             return no;
         }
 
-
-        public Nodo CorrigeAVL(Nodo pNodo)
-        {
-            Nodo aux;
-
-            if (pNodo != null)
-            {
-                pNodo.set_balance(Calcula_FB(pNodo));
-                if (pNodo.get_balance() == 2)
-                {
-                    aux = pNodo.get_no_esquerda();
-                    aux.set_balance(Calcula_FB(pNodo.get_no_esquerda()));
-                    if (aux.get_balance() > 0)
-                    {
-                        pNodo = rot_dir(pNodo);
-                    }
-                    else
-                    {
-                        pNodo = rot_esq_dir(pNodo);
-                    }
-                }
-                else if (pNodo.get_balance() == -2)
-                {
-                    aux = (pNodo.get_no_direita());
-                    aux.set_balance(Calcula_FB(pNodo.get_no_direita()));
-                    if (pNodo.get_balance() < 0)
-                    {
-                        pNodo = rot_esq(pNodo);
-                    }
-                    else
-                    {
-                        pNodo = rot_dir_esq(pNodo);
-                    }
-                }
-                pNodo.set_no_esquerda(CorrigeAVL(pNodo.get_no_esquerda()));
-                pNodo.set_no_direita(CorrigeAVL(pNodo.get_no_direita()));
-            }
-            return pNodo;
-        }
-
-        int Calcula_FB(Nodo pNodo)
-        {
-            if (pNodo == null) 
-                return 0;
-            return (Altura(pNodo.get_no_esquerda()) - Altura(pNodo.get_no_direita()));
-        }
-
-        int Altura(Nodo pNodo)
-        {
-            int Alt_Esq, Alt_Dir;
-            if (pNodo == null) return 0;
-            else
-            {
-                Alt_Esq = Altura(pNodo.get_no_esquerda());
-                Alt_Dir = Altura(pNodo.get_no_direita());
-                if (Alt_Esq > Alt_Dir)
-                {
-                    return (1 + Alt_Esq);
-                }
-                else
-                {
-                    return (1 + Alt_Dir);
-                }
-            }
-        }
-
-        void Seta_FB(Nodo pNodo)
-        {
-            if (pNodo != null)
-            {
-                pNodo.set_balance(Altura(pNodo.get_no_esquerda()) - Altura(pNodo.get_no_direita()));
-                Seta_FB(pNodo.get_no_esquerda());
-                Seta_FB(pNodo.get_no_direita());
-            }
-        }
-
-        void CASO1(Nodo p)
+        public Nodo CASO1(Nodo no)
         {
             /*x foi inserido à esq. de p e causou FB= -2*/
             Nodo u;
-            u = p.get_no_esquerda();
+            u = no.get_no_esquerda();
             if (u.get_balance() == -1) /*caso sinais iguais e negativos: rotação à direita*/
-                rot_dir(p);
+               no = rot_dir(no);
             else /*caso sinais trocados: rotação dupla u + p*/
-                rot_esq_dir(p);
+               no = rot_esq_dir(no);
            
-            p.set_balance(0);
+            no.set_balance(0);
+
+            return no;
         }
 
-        public void CASO2( Nodo no )
+        public Nodo CASO2( Nodo no )
         {
             Nodo aux;
 
             aux = no.get_no_direita();
 
             if (aux.get_balance() == 1)
-                rot_esq(no);
+                aux = rot_esq(no);
             else
-                rot_dir_esq(no);
+               aux = rot_dir_esq(no);
 
             aux.set_balance(0);
+
+            return aux;
         }
 
         private Nodo rot_esq (Nodo p)
@@ -188,6 +151,7 @@ namespace WindowsFormsApplication2
 
        private Nodo rot_dir(Nodo p)
         {
+
             Nodo q, temp;
             q = p.get_no_esquerda();
             temp = q.get_no_direita();

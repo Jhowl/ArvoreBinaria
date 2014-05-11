@@ -34,17 +34,17 @@ namespace WindowsFormsApplication2
         {
             try
             {
-                /*
+                
                 Random num = new Random();
                 int random = 0;
                 
-                for (int x = 0; x < ; x++)
+                for (int x = 1; x < 10000; x++)
                 {
-                    random = num.Next();*/
-                   int y = Convert.ToInt32(txtValor.Text);
-                    minhaArvore.insere(y);
-                    listBox1.Items.Add("Inserido: " + y);
-                //}
+                   random = num.Next(0, 100000);
+                   //int y = Convert.ToInt32(txtValor.Text);
+                   minhaArvore.insere(x);
+                   listBox1.Items.Add("Inserido: " + random);
+                }
             }
             catch
             {
