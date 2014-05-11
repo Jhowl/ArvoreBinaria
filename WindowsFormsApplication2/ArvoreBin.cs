@@ -42,79 +42,110 @@ namespace WindowsFormsApplication2
                 // árvore vazia, devemos criar o primeiro Nodo, que será a raiz
                 no = new Nodo();
                 raiz = no;
-                aloca(valor, raiz);
+                _aloca(valor, raiz);
             }
             else
             {
                 // localiza onde deve ser inserido o novo nó.
-                insere_arvore(valor, raiz);
+                raiz = insere_arvore(raiz, valor);
+                raiz = CorrigeAVL(raiz);
+                Seta_FB(raiz);
             }
         }
 
-        public void insere_arvore(int value, Nodo no)
+        public Nodo insere_arvore(Nodo no, int value)
         {
             if (no_eh_externo(no))
             {
                 /*árvore vazia: insere e sinaliza alteração de FB*/
-                aloca(value, no); 
+                no =_aloca(value, no); 
                 flag = true;
-                return;
+                return no;
             }
 
             if (value > no.get_valor())
-            {
-                insere_arvore(value, no.get_no_direita());
-                if (flag) /*inseriu: verificar balanceamento*/
-                    switch (no.get_balance())
-                    {
-                        case -1: /*era mais alto à esq.: zera FB*/
-                            no.set_balance(0);
-                            flag = false;
-                            break;
-                        case 0:
-                            no.set_balance(1);
-                            break;
-                        /*direita fica maior: propaga verificação*/
-                        case 1: /*FB(p) = 2 e p retorna balanceado*/
-                            CASO2(no);
-                            flag = false;
-                            break;
-                    }
-                return;
-            }
+               no.set_no_direita(insere_arvore(no.get_no_direita(), value));
 
             if (value < no.get_valor())
-            {
-                insere_arvore(value, no.get_no_esquerda());
-                if (flag)
-                    switch (no.get_balance())
-                    {
-                        case 1: /*mais alto a direita*/
-                            no.set_balance(0); /*balanceou com ins. esq*/
-                            flag = false; /*interrompe propagação*/
-                            break;
-                        case 0:
-                            no.set_balance(-1); /*ficou maior à esq.*/
-                            break;
-                        case -1: /*FB(p) = -2*/
-                            CASO1(no); /*p retorna balanceado*/
-                            flag = false;
-                            break; /*não propaga mais*/
-                    }
-            }
-            return;
+               no.set_no_esquerda(insere_arvore(no.get_no_esquerda(), value));
+
+            return no;
         }
 
 
-        public void aloca(int valor, Nodo no_aux)
+        public Nodo CorrigeAVL(Nodo pNodo)
         {
-            no_aux.set_valor(valor);
+            Nodo aux;
 
-            no_aux.set_balance(0);
+            if (pNodo != null)
+            {
+                pNodo.set_balance(Calcula_FB(pNodo));
+                if (pNodo.get_balance() == 2)
+                {
+                    aux = pNodo.get_no_esquerda();
+                    aux.set_balance(Calcula_FB(pNodo.get_no_esquerda()));
+                    if (aux.get_balance() > 0)
+                    {
+                        pNodo = rot_dir(pNodo);
+                    }
+                    else
+                    {
+                        pNodo = rot_esq_dir(pNodo);
+                    }
+                }
+                else if (pNodo.get_balance() == -2)
+                {
+                    aux = (pNodo.get_no_direita());
+                    aux.set_balance(Calcula_FB(pNodo.get_no_direita()));
+                    if (pNodo.get_balance() < 0)
+                    {
+                        pNodo = rot_esq(pNodo);
+                    }
+                    else
+                    {
+                        pNodo = rot_dir_esq(pNodo);
+                    }
+                }
+                pNodo.set_no_esquerda(CorrigeAVL(pNodo.get_no_esquerda()));
+                pNodo.set_no_direita(CorrigeAVL(pNodo.get_no_direita()));
+            }
+            return pNodo;
+        }
 
-            no_aux.set_no_direita(cria_No_externo(no_aux));
-        
-            no_aux.set_no_esquerda(cria_No_externo(no_aux));
+        int Calcula_FB(Nodo pNodo)
+        {
+            if (pNodo == null) 
+                return 0;
+            return (Altura(pNodo.get_no_esquerda()) - Altura(pNodo.get_no_direita()));
+        }
+
+        int Altura(Nodo pNodo)
+        {
+            int Alt_Esq, Alt_Dir;
+            if (pNodo == null) return 0;
+            else
+            {
+                Alt_Esq = Altura(pNodo.get_no_esquerda());
+                Alt_Dir = Altura(pNodo.get_no_direita());
+                if (Alt_Esq > Alt_Dir)
+                {
+                    return (1 + Alt_Esq);
+                }
+                else
+                {
+                    return (1 + Alt_Dir);
+                }
+            }
+        }
+
+        void Seta_FB(Nodo pNodo)
+        {
+            if (pNodo != null)
+            {
+                pNodo.set_balance(Altura(pNodo.get_no_esquerda()) - Altura(pNodo.get_no_direita()));
+                Seta_FB(pNodo.get_no_esquerda());
+                Seta_FB(pNodo.get_no_direita());
+            }
         }
 
         void CASO1(Nodo p)
@@ -144,7 +175,7 @@ namespace WindowsFormsApplication2
             aux.set_balance(0);
         }
 
-        private void rot_esq (Nodo p)
+        private Nodo rot_esq (Nodo p)
         {
             Nodo q, temp;
             q = p.get_no_direita();
@@ -152,9 +183,10 @@ namespace WindowsFormsApplication2
             q.set_no_esquerda(p);
             p.set_no_direita(temp);
             p = q;
+            return p;
         }
 
-       private void rot_dir(Nodo p)
+       private Nodo rot_dir(Nodo p)
         {
             Nodo q, temp;
             q = p.get_no_esquerda();
@@ -162,9 +194,10 @@ namespace WindowsFormsApplication2
             q.set_no_direita(p);
             p.set_no_esquerda(temp);
             p = q;
+            return p;
         }
 
-        private void rot_dir_esq(Nodo p)
+        private Nodo  rot_dir_esq(Nodo p)
         {
             Nodo z, v;
             z = p.get_no_direita();
@@ -186,9 +219,10 @@ namespace WindowsFormsApplication2
                 z.set_balance(1);
             }
             p = v;
+            return p;
         }
 
-        void rot_esq_dir(Nodo p)
+        public Nodo rot_esq_dir(Nodo p)
         {
             Nodo u, v;
             u = p.get_no_esquerda();
@@ -210,6 +244,7 @@ namespace WindowsFormsApplication2
                 u.set_balance(-1);
             }
             p = v;
+            return p;
         }
 
 
@@ -229,6 +264,19 @@ namespace WindowsFormsApplication2
 
             resultado = resultado + " - " + Convert.ToInt32(no.get_valor());
             Le_Nodo(no.get_no_direita());
+        }
+
+        private Nodo _aloca(int valor, Nodo no_aux)
+        {
+            no_aux.set_valor(valor);
+
+            no_aux.set_balance(0);
+
+            no_aux.set_no_direita(cria_No_externo(no_aux));
+
+            no_aux.set_no_esquerda(cria_No_externo(no_aux));
+
+            return no_aux;
         }
 
         // devolve um string com os elementos da árvore, em ordem crescentepublic 

@@ -38,7 +38,7 @@ namespace WindowsFormsApplication2
                 Random num = new Random();
                 int random = 0;
                 
-                for (int x = 10000000; x < y; x++)
+                for (int x = 0; x < ; x++)
                 {
                     random = num.Next();*/
                    int y = Convert.ToInt32(txtValor.Text);
