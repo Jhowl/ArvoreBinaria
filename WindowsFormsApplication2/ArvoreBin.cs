@@ -8,18 +8,15 @@ namespace WindowsFormsApplication2
 {
     class ArvoreBin
     { 
-        private Nodo raiz = null;// raiz da árvore
+        private Nodo raiz = null; // raiz da árvore
         
-        private int qtde = 0;// qtde de nos internos
+        private int qtde = 0; // qtde de nos internos
 
         private bool flag = false;
 
         private string resultado = "";
-        
-        public int qtde_nos_internos() // devolve a qtde de nós internos
-        { 
-            return qtde;
-        }
+
+        public int qtde_nos_internos() { return qtde; }
         
         public bool no_eh_externo(Nodo no)// verifica se um determinado Nodo é externo
         { 
@@ -51,7 +48,7 @@ namespace WindowsFormsApplication2
             }
         }
 
-        public Nodo insere_arvore(Nodo no, int value)
+        private Nodo insere_arvore(Nodo no, int value)
         {
 
             if (no_eh_externo(no))
@@ -78,7 +75,7 @@ namespace WindowsFormsApplication2
                            break;
                        /*direita fica maior: propaga verificação*/
                        case 1: /*FB(p) = 2 e p retorna balanceado*/
-                           no = CASO2(no);
+                           no = _Rotation_Dir(no);
                            flag = false;
                            break;
                    }
@@ -98,7 +95,7 @@ namespace WindowsFormsApplication2
                             no.set_balance(-1); /*ficou maior à esq.*/
                             break;
                         case -1: /*FB(p) = -2*/
-                            no = CASO1(no); /*p retorna balanceado*/
+                            no = _Rotation_Esq(no); /*p retorna balanceado*/
                             flag = false;
                             break; /*não propaga mais*/
                     }
@@ -107,38 +104,38 @@ namespace WindowsFormsApplication2
             return no;
         }
 
-        public Nodo CASO1(Nodo no)
-        {
+        private Nodo _Rotation_Esq(Nodo no)
+        {   
             /*x foi inserido à esq. de p e causou FB= -2*/
             Nodo u;
             u = no.get_no_esquerda();
             if (u.get_balance() == -1) /*caso sinais iguais e negativos: rotação à direita*/
-               no = rot_dir(no);
+               no = _rot_dir(no);
             else /*caso sinais trocados: rotação dupla u + p*/
-               no = rot_esq_dir(no);
+               no = _rot_esq_dir(no);
            
             no.set_balance(0);
 
             return no;
         }
 
-        public Nodo CASO2( Nodo no )
+        private Nodo _Rotation_Dir(Nodo no)
         {
             Nodo aux;
 
             aux = no.get_no_direita();
 
             if (aux.get_balance() == 1)
-                aux = rot_esq(no);
+                aux = _rot_esq(no);
             else
-               aux = rot_dir_esq(no);
+               aux = _rot_dir_esq(no);
 
             aux.set_balance(0);
 
             return aux;
         }
 
-        private Nodo rot_esq (Nodo p)
+        private Nodo _rot_esq (Nodo p)
         {
             Nodo q, temp;
             q = p.get_no_direita();
@@ -149,7 +146,7 @@ namespace WindowsFormsApplication2
             return p;
         }
 
-       private Nodo rot_dir(Nodo p)
+       private Nodo _rot_dir(Nodo p)
         {
 
             Nodo q, temp;
@@ -161,7 +158,7 @@ namespace WindowsFormsApplication2
             return p;
         }
 
-        private Nodo  rot_dir_esq(Nodo p)
+        private Nodo _rot_dir_esq(Nodo p)
         {
             Nodo z, v;
             z = p.get_no_direita();
@@ -186,7 +183,7 @@ namespace WindowsFormsApplication2
             return p;
         }
 
-        public Nodo rot_esq_dir(Nodo p)
+        private Nodo _rot_esq_dir(Nodo p)
         {
             Nodo u, v;
             u = p.get_no_esquerda();
@@ -211,6 +208,29 @@ namespace WindowsFormsApplication2
             return p;
         }
 
+        public Nodo Consulta(int ch)
+        {
+            Nodo pNodo = raiz;
+            while (! no_eh_externo(pNodo))
+            {
+                if (ch == pNodo.get_valor())
+                {
+                    return pNodo;
+                }
+                else
+                {
+                    if (ch < pNodo.get_valor())
+                    {
+                        pNodo = pNodo.get_no_esquerda();
+                    }
+                    else
+                    {
+                        pNodo = pNodo.get_no_direita();
+                    }
+                }
+            }
+            return null;
+        }
 
         public string listagem()
         {

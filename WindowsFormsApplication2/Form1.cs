@@ -68,5 +68,15 @@ namespace WindowsFormsApplication2
         {
             listBox1.Items.Add("Qtde: " + minhaArvore.qtde_nos_internos());
         }
+
+        private void button4_Click_1(object sender, EventArgs e)
+        {
+            int y = Convert.ToInt32(txtValor.Text);
+
+            if (minhaArvore.Consulta(y) != null)
+                listBox1.Items.Add("Encontrado ");
+            else
+                listBox1.Items.Add("Não encontrado: ");
+        }
     }
 }
