@@ -7,54 +7,56 @@ using System.Collections;
 namespace WindowsFormsApplication2
 {
     class ArvoreBin
-    { 
-        private Nodo raiz = null; // raiz da árvore
-        
+    {
+        private Nodo root = null; // raiz da árvore
+
         private int qtde = 0; // qtde de nos internos
 
         private bool flag = false;
 
-        private string resultado = "";
+        private int search = 0;
 
         public int qtde_nos_internos() { return qtde; }
-        
+
+        public int nos_for_search() { return search; }
+
         public bool no_eh_externo(Nodo no)// verifica se um determinado Nodo é externo
-        { 
-            return(no.get_no_direita() ==null) && (no.get_no_esquerda() ==null);
+        {
+            return (no.get_no_direita() == null) && (no.get_no_esquerda() == null);
         }
-        
+
         public Nodo cria_No_externo(Nodo Nopai) // cria um Nodo externo
         {
             Nodo no = new Nodo();
-            no.set_no_pai(Nopai);
+            //no.set_no_pai(Nopai);
             return no;
         }
 
-        public void insere(int valor)// insere um valor int
-         {
+        public void insert(int valor)// insere um valor int
+        {
             Nodo no;
 
-            if (raiz == null)
+            if (root == null)
             {
                 // árvore vazia, devemos criar o primeiro Nodo, que será a raiz
                 no = new Nodo();
-                raiz = no;
-                _aloca(valor, raiz);
+                root = no;
+                _aloca(valor, root);
             }
             else
             {
                 // localiza onde deve ser inserido o novo nó.
-                raiz = insere_arvore(raiz, valor);
+                root = insert_tree(root, valor);
             }
         }
 
-        private Nodo insere_arvore(Nodo no, int value)
+        private Nodo insert_tree(Nodo no, int value)
         {
 
             if (no_eh_externo(no))
             {
                 /*árvore vazia: insere e sinaliza alteração de FB*/
-                no =_aloca(value, no); 
+                no = _aloca(value, no);
                 flag = true;
                 qtde++;
                 return no;
@@ -62,28 +64,28 @@ namespace WindowsFormsApplication2
 
             if (value > no.get_valor())
             {
-                no.set_no_direita(insere_arvore(no.get_no_direita(), value));                
+                no.set_no_direita(insert_tree(no.get_no_direita(), value));
                 if (flag) /*inseriu: verificar balanceamento*/
-                   switch (no.get_balance())
-                   {
-                       case -1: /*era mais alto à esq.: zera FB*/
-                           no.set_balance(0);
-                           flag = false;
-                           break;
-                       case 0:
-                           no.set_balance(1);
-                           break;
-                       /*direita fica maior: propaga verificação*/
-                       case 1: /*FB(p) = 2 e p retorna balanceado*/
-                           no = _Rotation_Dir(no);
-                           flag = false;
-                           break;
-                   }
+                    switch (no.get_balance())
+                    {
+                        case -1:
+                            no.set_balance(0);
+                            flag = false;
+                            break;
+                        case 0:
+                            no.set_balance(1);
+                            break;
+                        /*direita fica maior: propaga verificação*/
+                        case 1: /*FB(p) = 2 e p retorna balanceado*/
+                            no = _SideRight(no);
+                            flag = false;
+                            break;
+                    }
             }
-               
+
             if (value < no.get_valor())
             {
-                no.set_no_esquerda(insere_arvore(no.get_no_esquerda(), value));                
+                no.set_no_esquerda(insert_tree(no.get_no_esquerda(), value));
                 if (flag)
                     switch (no.get_balance())
                     {
@@ -95,7 +97,7 @@ namespace WindowsFormsApplication2
                             no.set_balance(-1); /*ficou maior à esq.*/
                             break;
                         case -1: /*FB(p) = -2*/
-                            no = _Rotation_Esq(no); /*p retorna balanceado*/
+                            no = _SideLeft(no); /*p retorna balanceado*/
                             flag = false;
                             break; /*não propaga mais*/
                     }
@@ -104,38 +106,38 @@ namespace WindowsFormsApplication2
             return no;
         }
 
-        private Nodo _Rotation_Esq(Nodo no)
-        {   
+        private Nodo _SideLeft(Nodo no)
+        {
             /*x foi inserido à esq. de p e causou FB= -2*/
             Nodo u;
             u = no.get_no_esquerda();
             if (u.get_balance() == -1) /*caso sinais iguais e negativos: rotação à direita*/
-               no = _rot_dir(no);
+                no = _rot_right(no);
             else /*caso sinais trocados: rotação dupla u + p*/
-               no = _rot_esq_dir(no);
-           
+                no = _rot_left_right(no);
+
             no.set_balance(0);
 
             return no;
         }
 
-        private Nodo _Rotation_Dir(Nodo no)
+        private Nodo _SideRight(Nodo no)
         {
             Nodo aux;
 
             aux = no.get_no_direita();
 
             if (aux.get_balance() == 1)
-                aux = _rot_esq(no);
+                aux = _rot_left(no);
             else
-               aux = _rot_dir_esq(no);
+                aux = _rot_right_left(no);
 
             aux.set_balance(0);
 
             return aux;
         }
 
-        private Nodo _rot_esq (Nodo p)
+        private Nodo _rot_left(Nodo p)
         {
             Nodo q, temp;
             q = p.get_no_direita();
@@ -146,7 +148,7 @@ namespace WindowsFormsApplication2
             return p;
         }
 
-       private Nodo _rot_dir(Nodo p)
+        private Nodo _rot_right(Nodo p)
         {
 
             Nodo q, temp;
@@ -158,7 +160,7 @@ namespace WindowsFormsApplication2
             return p;
         }
 
-        private Nodo _rot_dir_esq(Nodo p)
+        private Nodo _rot_right_left(Nodo p)
         {
             Nodo z, v;
             z = p.get_no_direita();
@@ -183,7 +185,7 @@ namespace WindowsFormsApplication2
             return p;
         }
 
-        private Nodo _rot_esq_dir(Nodo p)
+        private Nodo _rot_left_right(Nodo p)
         {
             Nodo u, v;
             u = p.get_no_esquerda();
@@ -210,9 +212,11 @@ namespace WindowsFormsApplication2
 
         public Nodo Consulta(int ch)
         {
-            Nodo pNodo = raiz;
-            while (! no_eh_externo(pNodo))
+            search = 0;
+            Nodo pNodo = root;
+            while (!no_eh_externo(pNodo))
             {
+                search++;
                 if (ch == pNodo.get_valor())
                 {
                     return pNodo;
@@ -232,24 +236,6 @@ namespace WindowsFormsApplication2
             return null;
         }
 
-        public string listagem()
-        {
-            Le_Nodo(raiz);
-        
-            return resultado;
-        }
-
-        private void Le_Nodo(Nodo no)
-        {
-            if (no_eh_externo(no))
-                return;
-
-            Le_Nodo(no.get_no_esquerda());
-
-            resultado = resultado + " - " + Convert.ToInt32(no.get_valor());
-            Le_Nodo(no.get_no_direita());
-        }
-
         private Nodo _aloca(int valor, Nodo no_aux)
         {
             no_aux.set_valor(valor);
@@ -262,7 +248,5 @@ namespace WindowsFormsApplication2
 
             return no_aux;
         }
-
-        // devolve um string com os elementos da árvore, em ordem crescentepublic 
     }
 }

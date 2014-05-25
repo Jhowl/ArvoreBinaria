@@ -32,19 +32,26 @@ namespace WindowsFormsApplication2
 
         private void button1_Click(object sender, EventArgs e)
         {
+            
             try
             {
+                DateTime t_begin;
+                DateTime t_end;
+                TimeSpan t_difference;
+                t_begin = DateTime.Now;
                 
                 Random num = new Random();
-                int random = 0;
+               // int random = 0;
                 
-                for (int x = 1; x < 10000; x++)
+                for (int x = 0; x <= 20; x++)
                 {
-                   random = num.Next(0, 100000);
+                   //random = num.Next(0, 1000);
                    //int y = Convert.ToInt32(txtValor.Text);
-                   minhaArvore.insere(x);
-                   listBox1.Items.Add("Inserido: " + random);
+                   minhaArvore.insert(x);
                 }
+                t_end = DateTime.Now;
+                t_difference = t_end.Subtract(t_begin);
+                listBox1.Items.Add(t_difference.TotalSeconds.ToString("0.000000") + " segundos");
             }
             catch
             {
@@ -54,16 +61,6 @@ namespace WindowsFormsApplication2
             txtValor.Focus();
         }
 
-        private void button2_Click_1(object sender, EventArgs e)
-        {
-            //ArrayList dados = new ArrayList();
-            
-            //dados = minhaArvore.listagem();
-           // foreach (int itens in dados )
-            listBox1.Items.Add(minhaArvore.listagem());
-
-        }
-
         private void button3_Click(object sender, EventArgs e)
         {
             listBox1.Items.Add("Qtde: " + minhaArvore.qtde_nos_internos());
@@ -71,12 +68,20 @@ namespace WindowsFormsApplication2
 
         private void button4_Click_1(object sender, EventArgs e)
         {
-            int y = Convert.ToInt32(txtValor.Text);
+            try
+            {
+                int y = Convert.ToInt32(txtValor.Text);
 
-            if (minhaArvore.Consulta(y) != null)
-                listBox1.Items.Add("Encontrado ");
-            else
-                listBox1.Items.Add("Não encontrado: ");
+                if (minhaArvore.Consulta(y) != null)
+                    listBox1.Items.Add("Encontrado " + minhaArvore.nos_for_search());
+                else
+                    listBox1.Items.Add("Não encontrado: ");
+            }
+            catch
+            {
+                MessageBox.Show("Valor inválido! Digite apenas números!");
+            }
         }
+
     }
 }
