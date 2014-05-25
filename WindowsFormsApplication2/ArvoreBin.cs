@@ -165,8 +165,10 @@ namespace WindowsFormsApplication2
             Nodo z, v;
             z = p.get_no_direita();
             v = z.get_no_esquerda();
+
             z.set_no_esquerda(v.get_no_direita());
             v.set_no_direita(z);
+
             p.set_no_direita(v.get_no_esquerda());
             v.set_no_esquerda(p);
 
@@ -188,11 +190,14 @@ namespace WindowsFormsApplication2
         private Nodo _rot_left_right(Nodo p)
         {
             Nodo u, v;
+
             u = p.get_no_esquerda();
             v = u.get_no_direita();
+
             u.set_no_direita(v.get_no_esquerda());
             v.set_no_esquerda(u);
-            p.set_no_esquerda(v);
+
+            p.set_no_esquerda(v.get_no_direita());
             v.set_no_direita(p);
 
             /*atualizar FB de u e p em função de FB de v - a nova raiz*/

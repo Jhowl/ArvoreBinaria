@@ -1,0 +1,9 @@
+C:\Users\Jhowl\Desktop\ArvoreBinaria-master\WindowsFormsApplication2\bin\Release\WindowsFormsApplication2.exe.config
+C:\Users\Jhowl\Desktop\ArvoreBinaria-master\WindowsFormsApplication2\bin\Release\WindowsFormsApplication2.exe
+C:\Users\Jhowl\Desktop\ArvoreBinaria-master\WindowsFormsApplication2\bin\Release\WindowsFormsApplication2.pdb
+C:\Users\Jhowl\Desktop\ArvoreBinaria-master\WindowsFormsApplication2\obj\Release\WindowsFormsApplication2.Form1.resources
+C:\Users\Jhowl\Desktop\ArvoreBinaria-master\WindowsFormsApplication2\obj\Release\WindowsFormsApplication2.Properties.Resources.resources
+C:\Users\Jhowl\Desktop\ArvoreBinaria-master\WindowsFormsApplication2\obj\Release\TreeBinaryBalance.csproj.GenerateResource.Cache
+C:\Users\Jhowl\Desktop\ArvoreBinaria-master\WindowsFormsApplication2\obj\Release\WindowsFormsApplication2.exe
+C:\Users\Jhowl\Desktop\ArvoreBinaria-master\WindowsFormsApplication2\obj\Release\WindowsFormsApplication2.pdb
+C:\Users\Jhowl\Desktop\ArvoreBinaria-master\WindowsFormsApplication2\obj\Release\TreeBinaryBalance.csprojResolveAssemblyReference.cache

@@ -40,13 +40,13 @@ namespace WindowsFormsApplication2
                 TimeSpan t_difference;
                 t_begin = DateTime.Now;
                 
-                Random num = new Random();
+                //Random num = new Random();
                // int random = 0;
-                
-                for (int x = 0; x <= 20; x++)
+
+                for (int x = 1000000; x >= 1; x--)
                 {
                    //random = num.Next(0, 1000);
-                   //int y = Convert.ToInt32(txtValor.Text);
+                  //int y = Convert.ToInt32(txtValor.Text);
                    minhaArvore.insert(x);
                 }
                 t_end = DateTime.Now;
