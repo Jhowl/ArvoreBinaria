@@ -39,16 +39,20 @@ namespace WindowsFormsApplication2
                 DateTime t_end;
                 TimeSpan t_difference;
                 t_begin = DateTime.Now;
-                
-                //Random num = new Random();
-               // int random = 0;
 
-                for (int x = 1000000; x >= 1; x--)
+                //inserção manual
+                //int y = Convert.ToInt32(txtValor.Text);
+
+
+                Random num = new Random();
+                int random = 0;
+                for ( int x = 1; x <= 10000000; x++ )
                 {
-                   //random = num.Next(0, 1000);
-                  //int y = Convert.ToInt32(txtValor.Text);
-                   minhaArvore.insert(x);
+                    random = num.Next(0, 1000);
+                    //int y = Convert.ToInt32(txtValor.Text);
+                    minhaArvore.insert(random);
                 }
+
                 t_end = DateTime.Now;
                 t_difference = t_end.Subtract(t_begin);
                 listBox1.Items.Add(t_difference.TotalSeconds.ToString("0.000000") + " segundos");
@@ -57,6 +61,7 @@ namespace WindowsFormsApplication2
             {
                 MessageBox.Show("Valor inválido! Digite apenas números!");
             }
+
             txtValor.Clear();
             txtValor.Focus();
         }
@@ -75,13 +80,14 @@ namespace WindowsFormsApplication2
                 if (minhaArvore.Consulta(y) != null)
                     listBox1.Items.Add("Encontrado " + minhaArvore.nos_for_search());
                 else
-                    listBox1.Items.Add("Não encontrado: ");
+                    listBox1.Items.Add("Não encontrado");
             }
             catch
             {
                 MessageBox.Show("Valor inválido! Digite apenas números!");
             }
         }
+
 
     }
 }

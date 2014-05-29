@@ -163,26 +163,35 @@ namespace WindowsFormsApplication2
         private Nodo _rot_right_left(Nodo p)
         {
             Nodo z, v;
+
+            
+            z = _rot_right(p.get_no_direita());
+            p.set_no_direita(z);
+            v = _rot_left(p);
+            
+            /*
             z = p.get_no_direita();
             v = z.get_no_esquerda();
 
             z.set_no_esquerda(v.get_no_direita());
-            v.set_no_direita(z);
-
             p.set_no_direita(v.get_no_esquerda());
-            v.set_no_esquerda(p);
 
             /*atualizar FB de z e p em função de FB de v – a nova raiz*/
-            if (v.get_balance() == 1)
-            {
-                p.set_balance(-1);
-                z.set_balance(0);
-            }
-            else
+
+            if (v.get_balance() == -1)
             {
                 p.set_balance(0);
                 z.set_balance(1);
             }
+            else
+            {
+                p.set_balance(-v.get_balance());
+                z.set_balance(0);
+            }
+
+            v.set_no_direita(z);
+            v.set_no_esquerda(p);
+           
             p = v;
             return p;
         }
@@ -190,27 +199,34 @@ namespace WindowsFormsApplication2
         private Nodo _rot_left_right(Nodo p)
         {
             Nodo u, v;
-
+            
+            u = _rot_left(p.get_no_esquerda());
+            p.set_no_esquerda(u);
+            v =_rot_right(p);
+            /*
+            
             u = p.get_no_esquerda();
             v = u.get_no_direita();
 
             u.set_no_direita(v.get_no_esquerda());
-            v.set_no_esquerda(u);
-
             p.set_no_esquerda(v.get_no_direita());
-            v.set_no_direita(p);
 
             /*atualizar FB de u e p em função de FB de v - a nova raiz*/
+            /*antes: u^.bal=1 e p^.bal=-2*/
+
             if (v.get_balance() == -1)
-            { /*antes: u^.bal=1 e p^.bal=-2*/
+            { 
                 u.set_balance(0);
                 p.set_balance(1);
             }
             else
             {
                 p.set_balance(0);
-                u.set_balance(-1);
+                u.set_balance(-v.get_balance());
             }
+
+            v.set_no_esquerda(u);
+            v.set_no_direita(p);
             p = v;
             return p;
         }

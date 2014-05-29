@@ -7,6 +7,3 @@ C:\Users\Jhowl\Desktop\ArvoreBinaria-master\WindowsFormsApplication2\obj\Release
 C:\Users\Jhowl\Desktop\ArvoreBinaria-master\WindowsFormsApplication2\obj\Release\WindowsFormsApplication2.exe
 C:\Users\Jhowl\Desktop\ArvoreBinaria-master\WindowsFormsApplication2\obj\Release\WindowsFormsApplication2.pdb
 C:\Users\Jhowl\Desktop\ArvoreBinaria-master\WindowsFormsApplication2\obj\Release\TreeBinaryBalance.csprojResolveAssemblyReference.cache
-C:\Users\Jhowl\Documents\ArvoreBinaria\WindowsFormsApplication2\bin\Release\WindowsFormsApplication2.exe.config
-C:\Users\Jhowl\Documents\ArvoreBinaria\WindowsFormsApplication2\obj\Release\WindowsFormsApplication2.exe
-C:\Users\Jhowl\Documents\ArvoreBinaria\WindowsFormsApplication2\obj\Release\WindowsFormsApplication2.pdb
