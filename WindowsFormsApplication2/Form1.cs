@@ -43,12 +43,8 @@ namespace WindowsFormsApplication2
                 //inserção manual
                 //int y = Convert.ToInt32(txtValor.Text);
 
-
-                Random num = new Random();
-                int random = 0;
                 for ( int x = 1; x <= 10000000; x++ )
                 {
-                    random = num.Next(0, 1000);
                     //int y = Convert.ToInt32(txtValor.Text);
                     minhaArvore.insert(random);
                 }
